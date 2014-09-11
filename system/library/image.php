@@ -167,10 +167,17 @@ class Image {
         imagefilter($this->image, $filter);
     }
             
-    private function text($text, $x = 0, $y = 0, $size = 5, $color = '000000') {
+    /*private function text($text, $x = 0, $y = 0, $size = 5, $color = '000000') {
 		$rgb = $this->html2rgb($color);
         
 		imagestring($this->image, $size, $x, $y, $text, imagecolorallocate($this->image, $rgb[0], $rgb[1], $rgb[2]));
+    }*/
+
+    //Blitz code //
+    public function text($text, $x = 0, $y = 0, $size = 5, $color = '000000') {
+        $rgb = $this->html2rgb($color);
+
+        imagestring($this->image, $size, $x, $y, $text, imagecolorallocate($this->image, $rgb[0], $rgb[1], $rgb[2]));
     }
     
     private function merge($file, $x = 0, $y = 0, $opacity = 100) {

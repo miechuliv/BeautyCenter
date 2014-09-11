@@ -36,5 +36,60 @@ class ModelToolImage extends Model {
 			return HTTP_CATALOG . 'image/' . $new_image;
 		}	
 	}
+
+    /*
+     * Blitz code
+     * Adds text to image
+     * @param text string
+     * @param filename string
+     * @param newfilename string
+     */
+    public function addTextToImage($text,$filename,$newfilename)
+    {
+
+        if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
+            return;
+        }
+
+        $info = pathinfo($filename);
+
+        $extension = $info['extension'];
+
+        $old_image = $filename;
+        $new_image = $newfilename.'.'.$extension;
+
+        $path = '';
+
+        $directories = explode('/', dirname(str_replace('../', '', $new_image)));
+
+        foreach ($directories as $directory) {
+            $path = $path . '/' . $directory;
+
+            if (!file_exists(DIR_IMAGE . $path)) {
+                @mkdir(DIR_IMAGE . $path, 0777);
+            }
+        }
+
+        // Create Image From Existing File
+        $jpg_image = imagecreatefromjpeg('sunset.jpg');
+
+        // Allocate A Color For The Text
+        $white = imagecolorallocate($jpg_image, 255, 255, 255);
+
+        // Set Path to Font File
+        $font_path = 'font.TTF';
+
+        // Set Text to Be Printed On Image
+        $text = "This is a sunset!";
+
+        // Print Text On Image
+        imagettftext($jpg_image, 25, 0, 75, 300, $white, $font_path, $text);
+
+        // Send Image to Browser
+        imagejpeg($jpg_image);
+
+        // Clear Memory
+        imagedestroy($jpg_image);
+    }
 }
 ?>

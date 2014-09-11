@@ -765,6 +765,12 @@ class ModelSaleOrder extends Model {
                     $this->load->model('catalog/download');
                     $download_info = $this->model_catalog_download->getDownloadFrontend($order_download_id);
 
+                    if(!$download_info)
+                    {
+                        $date = new DateTime();
+                        $this->log->write(' No download info, cannot send file , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                    }
+
                     if($download_info)
                     {
                         $file = DIR_DOWNLOAD . $download_info['filename'];
@@ -773,12 +779,18 @@ class ModelSaleOrder extends Model {
                         {
                             $mail->addAttachment($file);
                         }
+                        else
+                        {
+                            $date = new DateTime();
+                            $this->log->write('Unable to locateg downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                        }
 
                     }
                 }
 
 
             }
+            /* Blitz code end */
 
 			$mail->send();
 		}

@@ -39,6 +39,11 @@ $_['text_email']				= 'Email';
 $_['text_order_data']			= 'Auftragsdaten';
 $_['text_abandoned_orders']		= 'Nicht Fertiggestellt';
 
+/* Blitz code */
+$_['text_file_send_success'] = '';
+$_['text_file_send_failure'] = '';
+$_['text_success_but_no_file_sent'] = '';
+
 // mail
 $_['text_mail_subject_delivery']	= '%s: Lieferschein Nr. %s zu Auftrag %s';
 $_['text_mail_subject_invoice']		= '%s: Rechnung Nr. %s zu Auftrag %s';

@@ -2169,8 +2169,16 @@ class ControllerSaleOrder extends Controller {
 				$this->data['error'] = $this->language->get('error_permission');
 			}
 			
-			if (!$this->data['error']) { 
-				$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+			if (!$this->data['error']) {
+                //$this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+                /* Blitz code start */
+                $result = $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
+
+                if($result && $result != 'no_file_sent')
+                {
+                    $this->data['error'] = $result;
+                }
+                /* Blitz code end */
 				
 				$this->data['success'] = $this->language->get('text_success');
 			}

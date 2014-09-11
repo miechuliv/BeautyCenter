@@ -1,0 +1,70 @@
+<modification>
+
+	<id>custom SEO urls</id>
+	<version>1.0.0</version>
+	<vqmver>1.2.3</vqmver>
+	<author>Joliva</author>
+
+	<file name="admin/controller/common/header.php">
+		<operation>
+			<search position="before" index="1"><![CDATA[
+				$this->data['text_catalog'] = $this->language->get('text_catalog');
+			]]></search>
+			<add><![CDATA[
+				$this->data['text_seourl'] = 'SEO url';
+			]]></add>
+		</operation>
+		<operation>
+			<search position="before" index="1"><![CDATA[
+				$this->data['category'] = $this->url->link('catalog/category', 'token=' . $this->session->data['token'], 'SSL');
+			]]></search>
+			<add><![CDATA[
+				$this->data['seourl'] = $this->url->link('seo/seourls', 'token=' . $this->session->data['token'], 'SSL');
+			]]></add>
+		</operation>
+	</file>
+
+	<file name="admin/view/template/common/header.tpl">
+		<operation>
+			<search position="before" index="1"><![CDATA[
+				<li><a href="<?php echo $setting; ?>"><?php echo $text_setting; ?></a></li>
+			]]></search>
+			<add><![CDATA[
+				<li><a href="<?php echo $seourl; ?>"><?php echo $text_seourl; ?></a></li>
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/common/seo_url.php">
+		<operation>
+			<search position="before" index="1" offset="3"><![CDATA[
+				if ($url) {
+			]]></search>
+			<add><![CDATA[
+					else {				
+						$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '".  $data['route'] . "'");
+					
+						if ($query->num_rows) {
+							$url .= '/' . $query->row['keyword'];
+							
+							unset($data[$key]);
+						}							
+						
+					}	
+			]]></add>
+		</operation>
+				<operation>
+			<search position="before" index="1"><![CDATA[
+				if (isset($this->request->get['route'])) {
+			]]></search>
+			<add><![CDATA[
+				else{
+					if ($query->num_rows) {
+						$this->request->get['route'] = $query->row['query'];
+					}
+				}
+			]]></add>
+		</operation>
+	</file>
+
+</modification>

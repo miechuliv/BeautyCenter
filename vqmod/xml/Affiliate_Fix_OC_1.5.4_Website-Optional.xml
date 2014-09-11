@@ -1,0 +1,109 @@
+<modification>
+
+		<id>Affiliate Fix Missing Website Field in Admin- URL Optional</id>
+	<version>1.o</version>
+	<vqmver>1.2.1</vqmver>
+	<author>I.Kelly based on Marvmen21</author>
+
+<file name="catalog/model/affiliate/affiliate.php">
+<operation><search position="replace"><![CDATA[
+$this->db->query("INSERT INTO " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "',
+]]></search><add trim="true"><![CDATA[
+$this->db->query("INSERT INTO " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', website = '" . $this->db->escape($data['website']) . "',
+]]></add></operation>
+
+<operation><search position="replace"><![CDATA[
+$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "',
+]]></search><add trim="true"><![CDATA[
+$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', website = '" . $this->db->escape($data['website']) . "',
+]]></add></operation></file>           
+                            
+                         
+<file name="system/library/affiliate.php">
+<operation><search position="after"><![CDATA[
+class Affiliate {
+ ]]></search><add><![CDATA[
+ 	private $website;
+     ]]></add></operation>
+	 <operation><search position="before"><![CDATA[
+				$this->fax = $affiliate_query->row['fax'];
+ ]]></search><add><![CDATA[
+				$this->website = $affiliate_query->row['website'];
+	]]></add></operation>
+				
+	<operation><search position="before"><![CDATA[
+		$this->fax = '';
+ ]]></search><add><![CDATA[
+		$this->website = '';
+	]]></add></operation>
+	<operation><search position="before"><![CDATA[
+  	public function getFax() {
+ ]]></search><add><![CDATA[
+public function getwebsite() {
+		return $this->website;
+  	}	]]></add></operation></file>
+         
+                           
+<file name="admin/view/template/sale/affiliate_form.tpl">
+<operation><search position="before"><![CDATA[
+              <td><?php echo $entry_fax; ?></td>
+ ]]></search><add><![CDATA[
+ <tr>
+                <td><?php echo $entry_website; ?></td>
+                <td><input type="text" name="website" value="<?php echo $website; ?>" style="width:300px;"/>
+                  </td>
+              </tr>
+     ]]></add></operation></file>
+
+	                         
+<file name="admin/controller/sale/affiliate.php">
+<operation><search position="before"><![CDATA[
+    	$this->data['entry_fax'] = $this->language->get('entry_fax');
+]]></search><add><![CDATA[
+    	$this->data['entry_website'] = $this->language->get('entry_website');
+]]></add></operation>
+
+
+
+<operation><search position="before"><![CDATA[
+    	if (isset($this->request->post['telephone'])) {
+ ]]></search><add><![CDATA[
+ if (isset($this->request->post['website'])) {
+      		$this->data['website'] = $this->request->post['website'];
+    	} elseif (!empty($affiliate_info)) { 
+			$this->data['website'] = $affiliate_info['website'];
+		} else {
+      		$this->data['website'] = '';
+    	}
+
+     ]]></add></operation>
+
+	 </file>
+
+
+<file name="admin/model/sale/affiliate.php">
+<operation><search position="replace"><![CDATA[
+$this->db->query("INSERT INTO " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "',
+]]></search><add trim="true"><![CDATA[
+$this->db->query("INSERT INTO " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', salt = '" . $this->db->escape($salt = substr(md5(uniqid(rand(), true)), 0, 9)) . "', password = '" . $this->db->escape(sha1($salt . sha1($salt . sha1($data['password'])))) . "', website = '" . $this->db->escape($data['website']) . "',
+]]></add></operation>
+
+<operation><search position="replace"><![CDATA[
+$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "',
+]]></search><add trim="true"><![CDATA[
+$this->db->query("UPDATE " . DB_PREFIX . "affiliate SET firstname = '" . $this->db->escape($data['firstname']) . "', lastname = '" . $this->db->escape($data['lastname']) . "', email = '" . $this->db->escape($data['email']) . "', telephone = '" . $this->db->escape($data['telephone']) . "', fax = '" . $this->db->escape($data['fax']) . "', website = '" . $this->db->escape($data['website']) . "',
+]]></add></operation></file>
+
+
+                         
+<file name="admin/language/english/sale/affiliate.php">
+<operation><search position="after"><![CDATA[
+<?php
+]]></search><add><![CDATA[
+$_['entry_website']      = 'Website:';
+
+]]></add></operation>
+
+</file>
+</modification>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @version		$Id: ox_sort_extensions.xml 2873 2012-10-05 20:46:50Z mic $ -->
+<language>
+	<id>Deutsch de_DE</id>
+    <!-- this translation version -->
+	<versionLang>1.0.0</versionLang>
+    <!-- the min. required shop version -->
+    <versionShopMin>1.6.1</versionShopMin>
+    <!-- the max. shop version (you have tested!) -->
+    <versionShopMax>1.6.6</versionShopMax>
+	<author>OSWorX</author>
+    <authorUrl>http://osworx.net</authorUrl>
+    <authorEmail>info@osworx.net</authorEmail>
+    <!-- optional if provided -->
+    <updateServer></updateServer>
+    <license>AGPL http://www.gnu.org/licenses/agpl.html</license>
+    <date>2013.08.12</date>
+    <!-- MUST be language -->
+    <type>language</type>
+    <!-- language target - options: both | admin | user -->
+    <target>both</target>
+
+    <!-- note: for fields use either <![CDATA[ .. ]]> or htmlentities -->
+    <description>
+        <en><![CDATA[German Language, Front- & Backend]]></en>
+        <de>Deutsche Sprache, Benutzer &amp; Admin</de>
+    </description>
+
+    <!-- add here all required values the system need -->
+    <params>
+        <name>Deutsch</name>
+        <code>de</code>
+        <locale>de_DE,de-de,german,de_DE.UTF-8</locale>
+        <image>de.png</image>
+        <directory>de_DE</directory>
+        <filename>de_DE</filename>
+    </params>
+
+    <!-- optional folder- / filelist: use if folder structure is NOT the normal OR the package does NOT contain the main folder upload as container fo all folders and files as given by OpenCart -->
+    <fileList>
+        <folders>
+            <root>upload</root>
+            <folder>folder1</folder>
+            <folder>folder2</folder>
+        </folders>
+        <files>
+            <file></file>
+        </files>
+        <!-- optional list of all files to ignore -->
+        <ignore></ignore>
+    </fileList>
+</language>

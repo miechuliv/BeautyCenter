@@ -1,0 +1,96 @@
+/* God I hate Microsoft! */
+#header {
+   z-index: 1200;
+}
+#header #cart {
+	width: 420px;
+}
+#header #cart .heading {
+	margin-right: 0px;
+	float: right;
+	margin-left: 172px;
+	margin-top: 15px;
+	padding-left: 14px;
+	padding-right: 14px;
+	border: 1px solid transparent;
+	border-bottom: none;
+	position: relative;
+	z-index: 1;	
+}
+#header #cart .content {
+
+}
+#header #search {
+	float: right;
+}
+#header .button-search {
+/*	top: 1px;*/
+}
+#header #search input {
+
+}
+/* menu */
+#menu ul li {
+}
+#menu ul li a {
+	height: 32px;
+}
+#menu ul li div {
+	min-width: 188px;		
+}
+#menu ul li:hover div {
+	display: block; 
+}
+#menu ul li ul {
+}
+#menu ul li ul li a {
+	height: auto;
+	display: block;
+}
+.success, .warning, .attention, .information {
+	position: relative;
+}
+.success .close, .warning .close, .attention .close, .information .close {
+	position: absolute;
+	right: 10px;
+}
+.box-product > div {
+	display: inline;
+}
+.product-grid > div {
+	display: inline;
+}
+/* button */
+.prduct-info a.button span {
+	line-height: 12px;
+	display: block;
+}
+#menu > ul > li > div > ul {
+	padding-bottom: 1px;	
+}
+
+.products_container {
+	margin-bottom: 14px;
+}
+#tab-review .ie_left{
+	padding-left: 0px;
+	margin-left: -215px;
+}
+
+.cart-info tbody .quantity input{
+	position: relative;
+	top: 4px;
+	cursor: pointer;
+}
+.checkout-heading a {
+	float: right;
+	margin:-16px 0 0;
+	padding: 0;
+	text-decoration: none;
+}
+.product-list .left {
+	margin-top: 26px;
+}
+.tags {
+	margin-top: 10px;
+}

@@ -96,6 +96,16 @@ class ModelCatalogDownload extends Model {
       	$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "download");
 		
 		return $query->row['total'];
-	}	
+	}
+
+
+    /*
+     * Blitz code
+     */
+    public function getDownloadFrontend($order_download_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_download od LEFT JOIN `" . DB_PREFIX . "order` o ON (od.order_id = o.order_id) WHERE  o.order_status_id > '0' AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' AND od.order_download_id = '" . (int)$order_download_id . "' AND od.remaining > 0");
+
+        return $query->row;
+    }
 }
 ?>

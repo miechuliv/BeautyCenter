@@ -763,7 +763,7 @@ class ModelSaleOrder extends Model {
                     }
 
                     $this->load->model('catalog/download');
-                    $download_info = $this->model_catalog_download->getDownload($order_download_id);
+                    $download_info = $this->model_catalog_download->getDownloadFrontend($order_download_id);
 
                     if($download_info)
                     {

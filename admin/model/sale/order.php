@@ -687,6 +687,9 @@ class ModelSaleOrder extends Model {
 	}
 	
 	public function addOrderHistory($order_id, $data) {
+        /* Blitz code start */
+        $result = 'no_file_sent';
+        /* Blitz code end */
 		$this->db->query("UPDATE `" . DB_PREFIX . "order` SET order_status_id = '" . (int)$data['order_status_id'] . "', date_modified = NOW() WHERE order_id = '" . (int)$order_id . "'");
 
 		$this->db->query("INSERT INTO " . DB_PREFIX . "order_history SET order_id = '" . (int)$order_id . "', order_status_id = '" . (int)$data['order_status_id'] . "', notify = '" . (isset($data['notify']) ? (int)$data['notify'] : 0) . "', comment = '" . $this->db->escape(strip_tags($data['comment'])) . "', date_added = NOW()");
@@ -747,12 +750,16 @@ class ModelSaleOrder extends Model {
 			$mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 
+
             /* Blitz code */
             /* send each downloadable product image as attachment if order is complete */
+
             if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
 
 
                 $res = $this->db->query("SELECT * FROM ".DB_PREFIX."order_download WHERE order_id = '".(int)$order_id."' ");
+
+                $result = array('success' => 0,'failure' => 0);
 
                 foreach($res->rows as $row)
                 {
@@ -769,6 +776,7 @@ class ModelSaleOrder extends Model {
                     {
                         $date = new DateTime();
                         $this->log->write(' No download info, cannot send file , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                        $result['failure']++;
                     }
 
                     if($download_info)
@@ -778,11 +786,13 @@ class ModelSaleOrder extends Model {
                         if(file_exists($file))
                         {
                             $mail->addAttachment($file);
+                            $result['success']++;
                         }
                         else
                         {
                             $date = new DateTime();
                             $this->log->write('Unable to locateg downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                            $result['failure']++;
                         }
 
                     }
@@ -797,6 +807,10 @@ class ModelSaleOrder extends Model {
         
         $this->load->model('payment/amazon_checkout');
         $this->model_payment_amazon_checkout->orderStatusChange($order_id, $data);
+
+        /* Blitz code */
+        return $result;
+        /* Blitz code end */
 	}
 		
 	public function getOrderHistories($order_id, $start = 0, $limit = 10) {

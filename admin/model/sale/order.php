@@ -748,30 +748,36 @@ class ModelSaleOrder extends Model {
 			$mail->setText(html_entity_decode($message, ENT_QUOTES, 'UTF-8'));
 
             /* Blitz code */
-            /* send downloadable product iamge as attachment if order is complete */
+            /* send each downloadable product image as attachment if order is complete */
             if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
+
 
                 $res = $this->db->query("SELECT * FROM ".DB_PREFIX."order_download WHERE order_id = '".(int)$order_id."' ");
 
-                if (isset($res->row['order_download_id']) && $res->row['order_download_id']) {
-                    $order_download_id = $res->row['order_download_id'];
-                } else {
-                    $order_download_id = 0;
-                }
-
-                $this->load->model('catalog/download');
-                $download_info = $this->model_catalog_download->getDownload($order_download_id);
-
-                if($download_info)
+                foreach($res->rows as $row)
                 {
-                    $file = DIR_DOWNLOAD . $download_info['filename'];
-
-                    if(file_exists($file))
-                    {
-                        $mail->addAttachment($file);
+                    if (isset($row['order_download_id']) && $row['order_download_id']) {
+                        $order_download_id = $res->row['order_download_id'];
+                    } else {
+                        $order_download_id = 0;
                     }
 
+                    $this->load->model('catalog/download');
+                    $download_info = $this->model_catalog_download->getDownload($order_download_id);
+
+                    if($download_info)
+                    {
+                        $file = DIR_DOWNLOAD . $download_info['filename'];
+
+                        if(file_exists($file))
+                        {
+                            $mail->addAttachment($file);
+                        }
+
+                    }
                 }
+
+
             }
 
 			$mail->send();

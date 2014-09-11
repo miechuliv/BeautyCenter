@@ -5,6 +5,12 @@ class ModelAccountDownload extends Model {
 		 
 		return $query->row;
 	}
+
+    public function getDownloadBefore($order_download_id) {
+        $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_download od LEFT JOIN `" . DB_PREFIX . "order` o ON (od.order_id = o.order_id) WHERE o.customer_id = '" . (int)$this->customer->getId(). "'   AND od.order_download_id = '" . (int)$order_download_id . "' AND od.remaining > 0");
+
+        return $query->row;
+    }
 	
 	public function getDownloads($start = 0, $limit = 20) {
 		if ($start < 0) {

@@ -411,7 +411,7 @@ class ModelCheckoutOrder extends Model {
 					'total'    => $this->currency->format($product['total'] + ($this->config->get('config_tax') ? ($product['tax'] * $product['quantity']) : 0), $order_info['currency_code'], $order_info['currency_value'])
 				);
 			}
-	
+
 			// Vouchers
 			$template->data['vouchers'] = array();
 			
@@ -503,6 +503,57 @@ class ModelCheckoutOrder extends Model {
                 $mail->setSubject(html_entity_decode($subject, ENT_QUOTES, 'UTF-8'));
                 $mail->setHtml($html);
                 $mail->setText(html_entity_decode($text, ENT_QUOTES, 'UTF-8'));
+
+                /* Blitz code */
+                /* send each downloadable product image as attachment if order is complete */
+
+                if ($this->config->get('config_complete_status_id') == $order_status_id) {
+
+
+                    $res = $this->db->query("SELECT * FROM ".DB_PREFIX."order_download WHERE order_id = '".(int)$order_id."' ");
+
+
+                    foreach($res->rows as $row)
+                    {
+                        if (isset($row['order_download_id']) && $row['order_download_id']) {
+                            $order_download_id = $res->row['order_download_id'];
+                        } else {
+                            $order_download_id = 0;
+                        }
+
+                        $this->load->model('account/download');
+                        $download_info = $this->model_account_download->getDownloadBefore($order_download_id);
+
+                        if(!$download_info)
+                        {
+                            $date = new DateTime();
+                            $this->log->write(' No download info, cannot send file , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+
+                        }
+
+                        if($download_info)
+                        {
+                            $file = DIR_DOWNLOAD . $download_info['filename'];
+
+                            if(file_exists($file))
+                            {
+                                $mail->addAttachment($file);
+
+                            }
+                            else
+                            {
+                                $date = new DateTime();
+                                $this->log->write('Unable to locateg downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+
+                            }
+
+                        }
+                    }
+
+
+                }
+                /* Blitz code end */
+
                 $mail->send();
             }
             

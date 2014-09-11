@@ -297,6 +297,20 @@ class ControllerCatalogDownload extends Controller {
 		} else {
 			$this->data['error_mask'] = '';
 		}
+
+        /* Blitz code */
+        if (isset($this->error['description'])) {
+            $this->data['error_description'] = $this->error['description'];
+        } else {
+            $this->data['error_description'] = '';
+        }
+
+        if (isset($this->error['date_end'])) {
+            $this->data['date_end'] = $this->error['date_end'];
+        } else {
+            $this->data['date_end'] = '';
+        }
+        /* Blitz code end */
 				
 		$url = '';
 			
@@ -365,6 +379,24 @@ class ControllerCatalogDownload extends Controller {
 		} else {
 			$this->data['filename'] = '';
 		}
+
+        /* Blitz code start */
+        if (isset($this->request->post['description'])) {
+            $this->data['description'] = $this->request->post['description'];
+        } elseif (!empty($download_info)) {
+            $this->data['description'] = $download_info['description'];
+        } else {
+            $this->data['description'] = '';
+        }
+
+        if (isset($this->request->post['date_end'])) {
+            $this->data['date_end'] = $this->request->post['date_end'];
+        } elseif (!empty($download_info)) {
+            $this->data['date_end'] = $download_info['date_end'];
+        } else {
+            $this->data['date_end'] = '';
+        }
+        /* Blitz end */
 		
     	if (isset($this->request->post['mask'])) {
     		$this->data['mask'] = $this->request->post['mask'];
@@ -415,6 +447,16 @@ class ControllerCatalogDownload extends Controller {
 		if (!file_exists(DIR_DOWNLOAD . $this->request->post['filename']) && !is_file(DIR_DOWNLOAD . $this->request->post['filename'])) {
 			$this->error['filename'] = $this->language->get('error_exists');
 		}
+
+        /* Blitz code start */
+        if ((utf8_strlen($this->request->post['description']) < 3)) {
+            $this->error['description'] = $this->language->get('error_description');
+        }
+
+        if ((utf8_strlen($this->request->post['date_end']) < 3) || (utf8_strlen($this->request->post['date_end']) > 128)) {
+            $this->error['date_end'] = $this->language->get('error_date_end');
+        }
+        /* Blitz code end */
 				
 		if ((utf8_strlen($this->request->post['mask']) < 3) || (utf8_strlen($this->request->post['mask']) > 128)) {
 			$this->error['mask'] = $this->language->get('error_mask');

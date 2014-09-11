@@ -40,6 +40,23 @@
               <span class="error"><?php echo $error_mask; ?></span>
               <?php } ?></td>
           </tr>
+
+            <tr>
+                <td><?php echo $entry_description; ?></td>
+                <td><select name="description" ><?php echo $description; ?></select>
+                    <?php if ($error_description) { ?>
+                    <span class="error"><?php echo $error_description; ?></span>
+                    <?php } ?></td>
+            </tr>
+
+            <tr>
+                <td><?php echo $entry_date_end; ?></td>
+                <td><input type="text" name="date_end" value="<?php echo $date_end; ?>" size="12" class="date" />
+                <?php if ($error_date_end) { ?>
+                <span class="error"><?php echo $error_date_end; ?></span>
+                <?php } ?></td>
+            </tr>
+
           <tr>
             <td><?php echo $entry_remaining; ?></td>
             <td><input type="text" name="remaining" value="<?php echo $remaining; ?>" size="6" /></td>
@@ -87,5 +104,11 @@ new AjaxUpload('#button-upload', {
 		$('.loading').remove();	
 	}
 });
-//--></script> 
+//--></script>
+
+<script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript"><!--
+    $('.date').datepicker({dateFormat: 'yy-mm-dd'});
+
+    //--></script>
 <?php echo $footer; ?>

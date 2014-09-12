@@ -1700,7 +1700,8 @@ class ControllerSaleOrder extends Controller {
 					$this->data['downloads'][] = array(
 						'name'      => $result['name'],
 						'filename'  => $result['mask'],
-						'remaining' => $result['remaining']
+						'remaining' => $result['remaining'],
+                        'description' => $result['description'],
 					);
 				}
 			}
@@ -2174,13 +2175,24 @@ class ControllerSaleOrder extends Controller {
                 /* Blitz code start */
                 $result = $this->model_sale_order->addOrderHistory($this->request->get['order_id'], $this->request->post);
 
-                if($result && $result != 'no_file_sent')
+                $this->data['success'] = $this->language->get('text_success');
+
+                if(is_array($result) && $result['failure'] > 0)
                 {
-                    $this->data['error'] = $result;
+                    $this->data['error'] = sprintf($this->language->get('text_file_send_failure'),$result['failure']);
+                }
+
+                if(is_array($result) && $result['success'] > 0)
+                {
+                    $this->data['success'] = sprintf($this->language->get('text_file_send_success'),$result['success']);
+                }
+                else
+                {
+                    $this->data['success'] = $this->language->get('text_success_but_no_file_sent');
                 }
                 /* Blitz code end */
 				
-				$this->data['success'] = $this->language->get('text_success');
+
 			}
 		}
 				

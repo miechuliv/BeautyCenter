@@ -97,11 +97,19 @@ class ModelSaleOrder extends Model {
 					}
 				}
 				
-				if (isset($order_product['order_download'])) {
+				/*if (isset($order_product['order_download'])) {
 					foreach ($order_product['order_download'] as $order_download) {
 						$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
 					}
-				}
+				}*/
+
+                /* Blitz code */
+                if (isset($order_product['order_download'])) {
+                    foreach ($order_product['order_download'] as $order_download) {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', description = '" . $this->db->escape($order_download['description']) . "',  filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
+                    }
+                }
+                /* Blitz code end */
 			}
 		}
 		
@@ -223,12 +231,20 @@ class ModelSaleOrder extends Model {
 						$this->db->query("UPDATE " . DB_PREFIX . "product_option_value SET quantity = (quantity - " . (int)$order_product['quantity'] . ") WHERE product_option_value_id = '" . (int)$order_option['product_option_value_id'] . "' AND subtract = '1'");
 					}
 				}
-				
-				if (isset($order_product['order_download'])) {
-					foreach ($order_product['order_download'] as $order_download) {
-						$this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_download_id = '" . (int)$order_download['order_download_id'] . "', order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
-					}
-				}
+
+                /*if (isset($order_product['order_download'])) {
+                    foreach ($order_product['order_download'] as $order_download) {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
+                    }
+                }*/
+
+                /* Blitz code */
+                if (isset($order_product['order_download'])) {
+                    foreach ($order_product['order_download'] as $order_download) {
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', description = '" . $this->db->escape($order_download['description']) . "',  filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
+                    }
+                }
+                /* Blitz code end */
 			}
 		}
 		
@@ -753,7 +769,7 @@ class ModelSaleOrder extends Model {
 
             /* Blitz code */
             /* send each downloadable product image as attachment if order is complete */
-
+            $data['order_status_id'] = $this->config->get('config_complete_status_id');
             if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
 
 
@@ -772,6 +788,8 @@ class ModelSaleOrder extends Model {
                     $this->load->model('catalog/download');
                     $download_info = $this->model_catalog_download->getDownloadFrontend($order_download_id);
 
+
+
                     if(!$download_info)
                     {
                         $date = new DateTime();
@@ -781,9 +799,42 @@ class ModelSaleOrder extends Model {
 
                     if($download_info)
                     {
+                        $download_descriptions = $this->model_catalog_download->getDownloadDescriptions($download_info['download_id']);
+
+                        $download_description = $download_descriptions[$order_info['language_id']];
+
                         $file = DIR_DOWNLOAD . $download_info['filename'];
 
-                        if(file_exists($file))
+                        $movedFile = DIR_IMAGE . $download_info['filename'];
+
+                        copy($file,$movedFile);
+
+                        if(is_dir(DIR_IMAGE.'order_images/'))
+                        {
+                            mkdir(DIR_IMAGE.'order_images/');
+                            chmod(DIR_IMAGE.'order_images/',0777);
+                        }
+
+                        if(is_dir(DIR_IMAGE.'order_images/'.$order_id.'/'))
+                        {
+                            mkdir(DIR_IMAGE.'order_images/'.$order_id.'/');
+                            chmod(DIR_IMAGE.'order_images/'.$order_id.'/',0777);
+                        }
+
+                        $modifiedImageFile = DIR_IMAGE.'order_images/'. $order_id.'/' . $download_info['filename'];
+
+                        if(file_exists($movedFile))
+                        {
+                            $this->model_catalog_download->prepareDownloadImage($movedFile,$modifiedImageFile,$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
+                        }
+                        else
+                        {
+                            $this->log->write('Unable to move file: '.$file.' to '. $movedFile.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                            $result['failure']++;
+                        }
+
+
+                        if(file_exists($modifiedImageFile))
                         {
                             $mail->addAttachment($file);
                             $result['success']++;
@@ -791,7 +842,7 @@ class ModelSaleOrder extends Model {
                         else
                         {
                             $date = new DateTime();
-                            $this->log->write('Unable to locateg downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                            $this->log->write('Unable to locate downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
                             $result['failure']++;
                         }
 

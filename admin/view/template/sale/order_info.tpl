@@ -358,6 +358,8 @@
           <thead>
             <tr>
               <td class="left"><b><?php echo $column_download; ?></b></td>
+              <td class="left"><b><?php echo $column_download_description; ?></b></td>
+                <td class="left"><b><?php echo $column_download_date_end; ?></b></td>
               <td class="left"><b><?php echo $column_filename; ?></b></td>
               <td class="right"><b><?php echo $column_remaining; ?></b></td>
             </tr>
@@ -366,6 +368,8 @@
             <?php foreach ($downloads as $download) { ?>
             <tr>
               <td class="left"><?php echo $download['name']; ?></td>
+                <td class="left"><?php echo $download['description']; ?></td>
+                <td class="left"><?php echo $download['date_end']; ?></td>
               <td class="left"><?php echo $download['filename']; ?></td>
               <td class="right"><?php echo $download['remaining']; ?></td>
             </tr>

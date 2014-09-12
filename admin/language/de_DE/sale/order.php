@@ -40,9 +40,11 @@ $_['text_order_data']			= 'Auftragsdaten';
 $_['text_abandoned_orders']		= 'Nicht Fertiggestellt';
 
 /* Blitz code */
-$_['text_file_send_success'] = '';
-$_['text_file_send_failure'] = '';
-$_['text_success_but_no_file_sent'] = '';
+$_['text_file_send_success'] = 'success %s';
+$_['text_file_send_failure'] = 'failure %s';
+$_['text_success_but_no_file_sent'] = 'no file sent';
+$_['column_download_description']        = 'Beschreibung';
+$_['column_download_date_end']        = 'Date bei';
 
 // mail
 $_['text_mail_subject_delivery']	= '%s: Lieferschein Nr. %s zu Auftrag %s';

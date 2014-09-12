@@ -210,8 +210,9 @@ class Cart {
 					$download_data = array();     		
 					
 					$download_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_to_download p2d LEFT JOIN " . DB_PREFIX . "download d ON (p2d.download_id = d.download_id) LEFT JOIN " . DB_PREFIX . "download_description dd ON (d.download_id = dd.download_id) WHERE p2d.product_id = '" . (int)$product_id . "' AND dd.language_id = '" . (int)$this->config->get('config_language_id') . "'");
-				
-					foreach ($download_query->rows as $download) {
+
+                    /* Blitz code start */
+					/*foreach ($download_query->rows as $download) {
 						$download_data[] = array(
 							'download_id' => $download['download_id'],
 							'name'        => $download['name'],
@@ -219,7 +220,21 @@ class Cart {
 							'mask'        => $download['mask'],
 							'remaining'   => $download['remaining']
 						);
-					}
+					}*/
+
+                    foreach ($download_query->rows as $download) {
+                        $download_data[] = array(
+                            'download_id' => $download['download_id'],
+                            'name'        => $download['name'],
+                            'filename'    => $download['filename'],
+                            'mask'        => $download['mask'],
+                            'remaining'   => $download['remaining'],
+                            'description'   => $download['description'],
+                            'date_end'   => $download['date_end'],
+                        );
+                    }
+
+                    /* Blitz code end */
 					
 					// Stock
 					if (!$product_query->row['quantity'] || ($product_query->row['quantity'] < $quantity)) {

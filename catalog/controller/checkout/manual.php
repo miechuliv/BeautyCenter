@@ -152,15 +152,29 @@ class ControllerCheckoutManual extends Controller {
 				}
 		
 				$download_data = array();
-				
-				foreach ($product['download'] as $download) {
+
+                /* Blitz code start */
+				/*foreach ($product['download'] as $download) {
 					$download_data[] = array(
 						'name'      => $download['name'],
 						'filename'  => $download['filename'],
 						'mask'      => $download['mask'],
 						'remaining' => $download['remaining']
+
 					);
-				}
+				}*/
+
+                foreach ($product['download'] as $download) {
+                    $download_data[] = array(
+                        'name'      => $download['name'],
+                        'filename'  => $download['filename'],
+                        'mask'      => $download['mask'],
+                        'remaining' => $download['remaining'],
+                        'description' => $download['descriptionr'],
+                        'date_end' => $download['date_end'],
+                    );
+                }
+                /* Blitz code end */
 								
 				$json['order_product'][] = array(
 					'product_id' => $product['product_id'],

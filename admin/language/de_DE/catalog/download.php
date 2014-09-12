@@ -27,7 +27,7 @@ $_['entry_remaining']  = 'Anzahl max. erlaubter Downloads';
 $_['entry_update']     = 'Bestehenden Kunden zur Verfügung stellen.<span class="help">Hier markieren wenn bereits erworbene Versionen aktualisiert werden sollen</span>';
 
 $_['entry_description']  = 'Beschreibung';
-$_['entry_date_end']     = 'Kupon ważny do';
+$_['entry_date_end']     = 'Gutschein gültig bis';
 
 // Error
 $_['error_permission']	= 'Hinweis: zuwenig Rechte für diese Aktion!';
@@ -39,5 +39,5 @@ $_['error_mask']       = 'Aliasname muss zwischen 3 und 128 Zeichen lang sein!';
 $_['error_filetype']   = 'Ungültiger Dateityp!';
 $_['error_product']    = 'Download ist mit %s Produkten verbunden und kann daher nicht gelöscht werden!';
 
-$_['error_description']   = 'Proszę podać opis!';
-$_['error_date_end']    = 'Proszę podać datę ważności kuponu!';
+$_['error_description']   = 'Bitte geben Sie die Produktbeschreibung ein';
+$_['error_date_end']    = 'Bitte legen Sie die Gültigkeit des Gutscheines fest';

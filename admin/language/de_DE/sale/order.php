@@ -40,11 +40,12 @@ $_['text_order_data']			= 'Auftragsdaten';
 $_['text_abandoned_orders']		= 'Nicht Fertiggestellt';
 
 /* Blitz code */
-$_['text_file_send_success'] = 'success %s';
-$_['text_file_send_failure'] = 'failure %s';
-$_['text_success_but_no_file_sent'] = 'no file sent';
+$_['text_file_send_success'] = '%s Gutscheine wurden an den Kunden geschickt.';
+$_['text_file_send_failure'] = 'Leider konnten %s Gutscheine nicht an den Kunden verschickt werden. Bitte manuell an den Kunden schicken. ';
+$_['text_success_but_no_file_sent'] = 'Leider konnten keine Gutscheine an den Kunden verschickt werden. Bitte schicken Sie die Gutscheine manuell';
 $_['column_download_description']        = 'Beschreibung';
-$_['column_download_date_end']        = 'Date bei';
+$_['column_download_date_end']        = 'Gutschein gültig bis';
+/* Blitz code end */
 
 // mail
 $_['text_mail_subject_delivery']	= '%s: Lieferschein Nr. %s zu Auftrag %s';

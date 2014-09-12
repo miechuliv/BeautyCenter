@@ -17,6 +17,38 @@
       <div id="tabs" class="htabs"><a href="#tab-general"><?php echo $tab_general; ?></a><a href="#tab-data"><?php echo $tab_data; ?></a><a href="#tab-links"><?php echo $tab_links; ?></a><a href="#tab-attribute"><?php echo $tab_attribute; ?></a><a href="#tab-option"><?php echo $tab_option; ?></a><a href="#tab-profile"><?php echo $tab_profile; ?></a><a href="#tab-discount"><?php echo $tab_discount; ?></a><a href="#tab-special"><?php echo $tab_special; ?></a><a href="#tab-image"><?php echo $tab_image; ?></a><a href="#tab-reward"><?php echo $tab_reward; ?></a><a href="#tab-design"><?php echo $tab_design; ?></a></div>
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <div id="tab-general">
+          <div style="width:273px;height:50px;padding:10px 10px 10px 10px;margin: 10px;font-size:16px" >
+              <label for="hackDownload">Ist das Produkt zum Download?</label>
+              <select name="hackDownload"  class="hackDownload" style="margin-top:10px;width:220px;">
+                  <?php if (!$shipping) { ?>
+                  <option value="1" selected="selected" ><?php echo $text_yes; ?></option>
+                  <option value="0" ><?php echo $text_no; ?></option>
+
+                  <?php } else { ?>
+                  <option value="1"  ><?php echo $text_yes; ?></option>
+                  <option value="0" selected="selected" ><?php echo $text_no; ?></option>
+                  <?php } ?>
+              </select>
+              <script type="text/javascript" >
+                  $('.hackDownload').change(function(){
+                      var option = $(this).find('option:selected');
+
+                      if($(option).val() == 1)
+                      {
+
+                          $('.shippingOff').click();
+                          $('input[name=\'weight\']').val(0);
+                      }
+                      else
+                      {
+
+                          $('.shippingOn').click();
+                      }
+
+                  })
+              </script>
+
+          </div>
           <div id="languages" class="htabs">
             <?php foreach ($languages as $language) { ?>
             <a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
@@ -141,14 +173,14 @@
             <tr>
               <td><?php echo $entry_shipping; ?></td>
               <td><?php if ($shipping) { ?>
-                <input type="radio" name="shipping" value="1" checked="checked" />
+                <input  class="shippingOn" type="radio" name="shipping" value="1" checked="checked" />
                 <?php echo $text_yes; ?>
-                <input type="radio" name="shipping" value="0" />
+                <input class="shippingOff" type="radio" name="shipping" value="0" />
                 <?php echo $text_no; ?>
                 <?php } else { ?>
-                <input type="radio" name="shipping" value="1" />
+                <input  class="shippingOn" type="radio" name="shipping" value="1" />
                 <?php echo $text_yes; ?>
-                <input type="radio" name="shipping" value="0" checked="checked" />
+                <input type="radio" class="shippingOff" name="shipping" value="0" checked="checked" />
                 <?php echo $text_no; ?>
                 <?php } ?></td>
             </tr>

@@ -164,8 +164,59 @@ class ControllerAccountDownload extends Controller {
 		$download_info = $this->model_account_download->getDownload($order_download_id);
 		
 		if ($download_info) {
-			$file = DIR_DOWNLOAD . $download_info['filename'];
-			$mask = basename($download_info['mask']);
+
+            /*Blitz code start*/
+            $this->load->model('account/order');
+
+            $order_info = $this->model_account_order->getOrder($download_info['order_id']);
+
+            $file = DIR_DOWNLOAD . $download_info['filename'];
+
+            $movedFile = DIR_IMAGE . $download_info['filename'];
+
+            // remove ending hash
+            $t = explode('.',$movedFile);
+            array_pop($t);
+            $movedFile = implode('.',$t);
+
+            copy($file,$movedFile);
+
+            if(!is_dir(DIR_IMAGE.'order_images/'))
+            {
+                mkdir(DIR_IMAGE.'order_images/');
+                chmod(DIR_IMAGE.'order_images/',0777);
+            }
+
+            if(!is_dir(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/'))
+            {
+                mkdir(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/');
+                chmod(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/',0777);
+            }
+
+            $modifiedImageFile = DIR_IMAGE.'order_images/'. $order_info['order_id'].'/' . $download_info['filename'];
+
+            // remove ending hash
+            $t = explode('.',$modifiedImageFile);
+            array_pop($t);
+            // also remove extension ( if PDF conversion )
+            array_pop($t);
+            $modifiedImageFile = implode('.',$t).'.pdf';
+
+            $date = new DateTime();
+
+            if(file_exists($movedFile))
+            {
+                $this->model_account_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_info['order_id']);
+            }
+            else
+            {
+                $this->log->write('Unable to move file: '.$file.' to '. $movedFile.' , order_id: '.$order_info['order_id'].' date: '.$date->format('Y-m-d'));
+
+            }
+
+            $mask = false;
+            $file = $modifiedImageFile;
+            /*Blitz code end*/
 
 			if (!headers_sent()) {
 				if (file_exists($file)) {

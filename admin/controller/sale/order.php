@@ -1718,6 +1718,7 @@ class ControllerSaleOrder extends Controller {
 						'remaining' => $result['remaining'],
                         'description' => $result['description'],
                         'date_end' => $result['date_end'],
+                        'href'  => $this->url->link('sale/order/downloadDownload', 'token=' . $this->session->data['token'] . '&order_download_id=' . $result['order_download_id'] , 'SSL')
 					);
 				}
                 /*Blitz code end*/
@@ -2254,6 +2255,102 @@ class ControllerSaleOrder extends Controller {
 		
 		$this->response->setOutput($this->render());
   	}
+
+    public function downloadDownload()
+    {
+
+
+        $this->load->model('catalog/download');
+
+        if (isset($this->request->get['order_download_id'])) {
+            $order_download_id = $this->request->get['order_download_id'];
+        } else {
+            $order_download_id = 0;
+        }
+
+        $download_info = $this->model_catalog_download->getDownloadFrontend($order_download_id);
+
+        if ($download_info) {
+
+            /*Blitz code start*/
+            $this->load->model('sale/order');
+
+            $order_info = $this->model_sale_order->getOrder($download_info['order_id']);
+
+            $file = DIR_DOWNLOAD . $download_info['filename'];
+
+            $movedFile = DIR_IMAGE . $download_info['filename'];
+
+            // remove ending hash
+            $t = explode('.',$movedFile);
+            array_pop($t);
+            $movedFile = implode('.',$t);
+
+            copy($file,$movedFile);
+
+            if(!is_dir(DIR_IMAGE.'order_images/'))
+            {
+                mkdir(DIR_IMAGE.'order_images/');
+                chmod(DIR_IMAGE.'order_images/',0777);
+            }
+
+            if(!is_dir(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/'))
+            {
+                mkdir(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/');
+                chmod(DIR_IMAGE.'order_images/'.$order_info['order_id'].'/',0777);
+            }
+
+            $modifiedImageFile = DIR_IMAGE.'order_images/'. $order_info['order_id'].'/' . $download_info['filename'];
+
+            // remove ending hash
+            $t = explode('.',$modifiedImageFile);
+            array_pop($t);
+            // also remove extension ( if PDF conversion )
+            array_pop($t);
+            $modifiedImageFile = implode('.',$t).'.pdf';
+
+            $date = new DateTime();
+
+            if(file_exists($movedFile))
+            {
+                $this->model_catalog_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_info['order_id']);
+            }
+            else
+            {
+                $this->log->write('Unable to move file: '.$file.' to '. $movedFile.' , order_id: '.$order_info['order_id'].' date: '.$date->format('Y-m-d'));
+
+            }
+
+            $mask = false;
+            $file = $modifiedImageFile;
+            /*Blitz code end*/
+
+            if (!headers_sent()) {
+                if (file_exists($file)) {
+                    header('Content-Type: application/octet-stream');
+                    header('Content-Disposition: attachment; filename="' . ($mask ? $mask : basename($file)) . '"');
+                    header('Expires: 0');
+                    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                    header('Pragma: public');
+                    header('Content-Length: ' . filesize($file));
+
+                    if (ob_get_level()) ob_end_clean();
+
+                    readfile($file, 'rb');
+
+                    //$this->model_account_download->updateRemaining($this->request->get['order_download_id']);
+
+                    exit;
+                } else {
+                    exit('Error: Could not find file ' . $file . '!');
+                }
+            } else {
+                exit('Error: Headers already sent out!');
+            }
+        } else {
+           // $this->redirect($this->url->link('account/download', '', 'SSL'));
+        }
+    }
 	
 	public function download() {
 		$this->load->model('sale/order');

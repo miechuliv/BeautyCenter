@@ -362,6 +362,7 @@
                 <td class="left"><b><?php echo $column_download_date_end; ?></b></td>
               <td class="left"><b><?php echo $column_filename; ?></b></td>
               <td class="right"><b><?php echo $column_remaining; ?></b></td>
+                <td class="right"><b>Download</b></td>
             </tr>
           </thead>
           <tbody>
@@ -372,6 +373,9 @@
                 <td class="left"><?php echo $download['date_end']; ?></td>
               <td class="left"><?php echo $download['filename']; ?></td>
               <td class="right"><?php echo $download['remaining']; ?></td>
+              <td class="right">
+                  <a href="<?php echo $download['href']; ?>"><img src="catalog/view/theme/default/image/download.png" alt="Download" title="Download" /></a>
+              </td>
             </tr>
             <?php } ?>
           </tbody>

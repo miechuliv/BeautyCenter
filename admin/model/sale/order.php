@@ -106,7 +106,7 @@ class ModelSaleOrder extends Model {
                 /* Blitz code */
                 if (isset($order_product['order_download'])) {
                     foreach ($order_product['order_download'] as $order_download) {
-                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', description = '" . $this->db->escape($order_download['description']) . "',  filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', description = '" . $this->db->escape($order_download['description']) . "', date_end = '" . $this->db->escape($order_download['date_end']) . "', filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
                     }
                 }
                 /* Blitz code end */
@@ -241,7 +241,7 @@ class ModelSaleOrder extends Model {
                 /* Blitz code */
                 if (isset($order_product['order_download'])) {
                     foreach ($order_product['order_download'] as $order_download) {
-                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "', description = '" . $this->db->escape($order_download['description']) . "',  filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
+                        $this->db->query("INSERT INTO " . DB_PREFIX . "order_download SET order_id = '" . (int)$order_id . "', order_product_id = '" . (int)$order_product_id . "', name = '" . $this->db->escape($order_download['name']) . "' , date_end = '" . $this->db->escape($order_download['date_end']) . "' , description = '" . $this->db->escape($order_download['description']) . "',  filename = '" . $this->db->escape($order_download['filename']) . "', mask = '" . $this->db->escape($order_download['mask']) . "', remaining = '" . (int)$order_download['remaining'] . "'");
                     }
                 }
                 /* Blitz code end */
@@ -799,9 +799,7 @@ class ModelSaleOrder extends Model {
 
                     if($download_info)
                     {
-                        $download_descriptions = $this->model_catalog_download->getDownloadDescriptions($download_info['download_id']);
 
-                        $download_description = $download_descriptions[$order_info['language_id']];
 
                         $file = DIR_DOWNLOAD . $download_info['filename'];
 
@@ -836,7 +834,7 @@ class ModelSaleOrder extends Model {
 
                         if(file_exists($modifiedImageFile))
                         {
-                            $mail->addAttachment($file);
+                            $mail->addAttachment($modifiedImageFile);
                             $result['success']++;
                         }
                         else
@@ -853,7 +851,7 @@ class ModelSaleOrder extends Model {
             }
             /* Blitz code end */
 
-			$mail->send();
+			//$mail->send();
 		}
         
         $this->load->model('payment/amazon_checkout');

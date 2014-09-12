@@ -508,11 +508,11 @@ class ModelCheckoutOrder extends Model {
 
                 /* Blitz code */
                 /* send each downloadable product image as attachment if order is complete */
-
                 if ($this->config->get('config_complete_status_id') == $order_status_id) {
 
 
                     $res = $this->db->query("SELECT * FROM ".DB_PREFIX."order_download WHERE order_id = '".(int)$order_id."' ");
+
 
 
                     foreach($res->rows as $row)
@@ -524,7 +524,9 @@ class ModelCheckoutOrder extends Model {
                         }
 
                         $this->load->model('account/download');
-                        $download_info = $this->model_account_download->getDownloadBefore($order_download_id);
+                        $download_info = $this->model_account_download->getDownload($order_download_id);
+
+
 
                         if(!$download_info)
                         {
@@ -535,18 +537,61 @@ class ModelCheckoutOrder extends Model {
 
                         if($download_info)
                         {
+
+
                             $file = DIR_DOWNLOAD . $download_info['filename'];
 
-                            if(file_exists($file))
+                            $movedFile = DIR_IMAGE . $download_info['filename'];
+
+                            // remove ending hash
+                            $t = explode('.',$movedFile);
+                            array_pop($t);
+                            $movedFile = implode('.',$t);
+
+                            copy($file,$movedFile);
+
+                            if(!is_dir(DIR_IMAGE.'order_images/'))
                             {
-                                $mail->addAttachment($file);
+                                mkdir(DIR_IMAGE.'order_images/');
+                                chmod(DIR_IMAGE.'order_images/',0777);
+                            }
+
+                            if(!is_dir(DIR_IMAGE.'order_images/'.$order_id.'/'))
+                            {
+                                mkdir(DIR_IMAGE.'order_images/'.$order_id.'/');
+                                chmod(DIR_IMAGE.'order_images/'.$order_id.'/',0777);
+                            }
+
+                            $modifiedImageFile = DIR_IMAGE.'order_images/'. $order_id.'/' . $download_info['filename'];
+
+                            // remove ending hash
+                            $t = explode('.',$modifiedImageFile);
+                            array_pop($t);
+                            // also remove extension ( if PDF conversion )
+                            array_pop($t);
+                            $modifiedImageFile = implode('.',$t).'.pdf';
+
+                            if(file_exists($movedFile))
+                            {
+                                $this->model_catalog_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
+                            }
+                            else
+                            {
+                                $this->log->write('Unable to move file: '.$file.' to '. $movedFile.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+
+                            }
+
+
+                            if(file_exists($modifiedImageFile))
+                            {
+                                $mail->addAttachment($modifiedImageFile);
 
                             }
                             else
                             {
                                 $date = new DateTime();
-                                $this->log->write('Unable to locateg downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
-
+                                $this->log->write('Unable to locate downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
+                                
                             }
 
                         }
@@ -554,6 +599,7 @@ class ModelCheckoutOrder extends Model {
 
 
                 }
+
                 /* Blitz code end */
 
                 $mail->send();

@@ -86,7 +86,7 @@ class ModelCatalogDownload extends Model {
 		$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
 		
 		foreach ($query->rows as $result) {
-			$download_description_data[$result['language_id']] = array('name' => $result['name']);
+			$download_description_data[$result['language_id']] = array('name' => $result['name'] , 'description' => $result['description']);
 		}
 		
 		return $download_description_data;
@@ -106,6 +106,14 @@ class ModelCatalogDownload extends Model {
         $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "order_download od LEFT JOIN `" . DB_PREFIX . "order` o ON (od.order_id = o.order_id) WHERE  o.order_status_id > '0' AND o.order_status_id = '" . (int)$this->config->get('config_complete_status_id') . "' AND od.order_download_id = '" . (int)$order_download_id . "' AND od.remaining > 0");
 
         return $query->row;
+    }
+
+
+    public function prepareDownloadImage($filename,$newfilename,$firstname,$lastname,$title,$description,$code)
+    {
+        $this->load->model('tool/image');
+
+        $this->model_tool_image->addTextToImage($firstname,'2','2','10','FFFFFF',$filename,$newfilename);
     }
 }
 ?>

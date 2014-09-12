@@ -44,7 +44,7 @@ class ModelToolImage extends Model {
      * @param filename string
      * @param newfilename string
      */
-    public function addTextToImage($text,$filename,$newfilename)
+    public function addTextToImage($text,$x,$y,$size,$color,$filename,$newfilename)
     {
 
         if (!file_exists(DIR_IMAGE . $filename) || !is_file(DIR_IMAGE . $filename)) {
@@ -56,7 +56,7 @@ class ModelToolImage extends Model {
         $extension = $info['extension'];
 
         $old_image = $filename;
-        $new_image = $newfilename.'.'.$extension;
+        $new_image = $newfilename;
 
         $path = '';
 
@@ -70,26 +70,11 @@ class ModelToolImage extends Model {
             }
         }
 
-        // Create Image From Existing File
-        $jpg_image = imagecreatefromjpeg('sunset.jpg');
+        $image = new Image(DIR_IMAGE . $old_image);
+        $image->text($text, $x, $y, $size, $color);
+        $image->save(DIR_IMAGE . $new_image);
 
-        // Allocate A Color For The Text
-        $white = imagecolorallocate($jpg_image, 255, 255, 255);
-
-        // Set Path to Font File
-        $font_path = 'font.TTF';
-
-        // Set Text to Be Printed On Image
-        $text = "This is a sunset!";
-
-        // Print Text On Image
-        imagettftext($jpg_image, 25, 0, 75, 300, $white, $font_path, $text);
-
-        // Send Image to Browser
-        imagejpeg($jpg_image);
-
-        // Clear Memory
-        imagedestroy($jpg_image);
+        return true;
     }
 }
 ?>

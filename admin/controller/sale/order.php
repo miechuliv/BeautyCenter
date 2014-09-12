@@ -1457,6 +1457,11 @@ class ControllerSaleOrder extends Controller {
 			$this->data['column_price'] = $this->language->get('column_price');
 			$this->data['column_total'] = $this->language->get('column_total');
 			$this->data['column_download'] = $this->language->get('column_download');
+            /* Blitz code start */
+            $this->data['column_download_description'] = $this->language->get('column_download_description');
+            $this->data['column_download_date_end'] = $this->language->get('column_download_date_end');
+            /* Blitz code end */
+
 			$this->data['column_filename'] = $this->language->get('column_filename');
 			$this->data['column_remaining'] = $this->language->get('column_remaining');
 						
@@ -1695,15 +1700,27 @@ class ControllerSaleOrder extends Controller {
 
 			foreach ($products as $product) {
 				$results = $this->model_sale_order->getOrderDownloads($this->request->get['order_id'], $product['order_product_id']);
-	
+
+                /*Blitz code start*/
+                /*foreach ($results as $result) {
+                    $this->data['downloads'][] = array(
+                        'name'      => $result['name'],
+                        'filename'  => $result['mask'],
+                        'remaining' => $result['remaining'],
+
+                    );
+                }*/
+
 				foreach ($results as $result) {
 					$this->data['downloads'][] = array(
 						'name'      => $result['name'],
 						'filename'  => $result['mask'],
 						'remaining' => $result['remaining'],
                         'description' => $result['description'],
+                        'date_end' => $result['date_end'],
 					);
 				}
+                /*Blitz code end*/
 			}
 			
 			$this->data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();

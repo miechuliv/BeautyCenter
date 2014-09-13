@@ -508,6 +508,7 @@ class ModelCheckoutOrder extends Model {
 
                 /* Blitz code */
                 /* send each downloadable product image as attachment if order is complete */
+
                 if ($this->config->get('config_complete_status_id') == $order_status_id) {
 
 
@@ -524,7 +525,7 @@ class ModelCheckoutOrder extends Model {
                         }
 
                         $this->load->model('account/download');
-                        $download_info = $this->model_account_download->getDownload($order_download_id);
+                        $download_info = $this->model_account_download->getDownloadBefore($order_download_id);
 
 
 
@@ -573,7 +574,7 @@ class ModelCheckoutOrder extends Model {
 
                             if(file_exists($movedFile))
                             {
-                                $this->model_catalog_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
+                                $this->model_account_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
                             }
                             else
                             {
@@ -591,7 +592,7 @@ class ModelCheckoutOrder extends Model {
                             {
                                 $date = new DateTime();
                                 $this->log->write('Unable to locate downloadable file: '.$file.' , order_id: '.$order_id.' date: '.$date->format('Y-m-d'));
-                                
+
                             }
 
                         }

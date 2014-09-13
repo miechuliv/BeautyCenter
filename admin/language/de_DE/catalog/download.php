@@ -8,20 +8,20 @@
  */
 
 // Heading
-$_['heading_title']    = 'Downloads';
+$_['heading_title']    = 'Gutscheine';
 
 // Text
 $_['text_success']     = 'Erfolgreich: Downloads geändert!';
 $_['text_upload']      = 'Datei wurde erfolgreich geladen!';
 
 // Column
-$_['column_name']      = 'Behandlung';
+$_['column_name']      = 'Titel des Gutscheines';
 $_['column_remaining'] = 'Max. erlaubte Downloads';
 $_['column_action']    = 'Aktion';
 
 // Entry
 $_['entry_name']       = 'Behandlung';
-$_['entry_filename']   = 'Dateiname<span class="help">Datei kann entweder über den Downloadbutton geladen werden oder per FTP (in Ordner download). Wenn per FTP, dann Details unten angeben.<br /><br /><strong>Hinweis</strong>:<br />es wird empfohlen dass Dateiname und Aliasname verschieden sind. Damit kann eine Direktverlinkung verhindert werden. Die Datei muss eine Auflösung 2408 x 3508, oder etwa die gleiche Breite zu Höhe proprocji sein. Datei-Upload nicht richtig in der Einführung von schlechten Daten führen. Zu sehen, wie die erzeugte Datendatei, erstellen Sie eine Testbestellung und ändern ihren Status abgeschlossen und die erzeugte Datei sollte auf die in der Bestellung angegebene E-Mail gesendet werden.</span>';
+$_['entry_filename']   = 'Dateiname<span class="help">Der Gutschein (.jpg Format) muss folgende Masse haben: XX x XX px</span>';
 $_['entry_mask']       = 'Aliasname';
 $_['entry_remaining']  = 'Anzahl max. erlaubter Downloads';
 $_['entry_update']     = 'Bestehenden Kunden zur Verfügung stellen.<span class="help">Hier markieren wenn bereits erworbene Versionen aktualisiert werden sollen</span>';

@@ -15,12 +15,12 @@ $_['text_success']     = 'Erfolgreich: Downloads geändert!';
 $_['text_upload']      = 'Datei wurde erfolgreich geladen!';
 
 // Column
-$_['column_name']      = 'Bezeichnung';
+$_['column_name']      = 'Behandlung';
 $_['column_remaining'] = 'Max. erlaubte Downloads';
 $_['column_action']    = 'Aktion';
 
 // Entry
-$_['entry_name']       = 'Downloadname';
+$_['entry_name']       = 'Behandlung';
 $_['entry_filename']   = 'Dateiname<span class="help">Datei kann entweder über den Downloadbutton geladen werden oder per FTP (in Ordner download). Wenn per FTP, dann Details unten angeben.<br /><br /><strong>Hinweis</strong>:<br />es wird empfohlen dass Dateiname und Aliasname verschieden sind. Damit kann eine Direktverlinkung verhindert werden.</span>';
 $_['entry_mask']       = 'Aliasname';
 $_['entry_remaining']  = 'Anzahl max. erlaubter Downloads';

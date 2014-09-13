@@ -41,12 +41,15 @@
               <?php } ?></td>
           </tr>
 
-            <tr>
-                <td><?php echo $entry_description; ?></td>
-                <td><select name="description" ><?php echo $description; ?></select>
-                    <?php if ($error_description) { ?>
-                    <span class="error"><?php echo $error_description; ?></span>
-                    <?php } ?></td>
+            <?php /* blitz code */ ?>
+            <td><span class="required">*</span> <?php echo $entry_description; ?></td>
+            <td><?php foreach ($languages as $language) { ?>
+                <textarea style="width:500px;height:200px;" name="download_description[<?php echo $language['language_id']; ?>][description]"  ><?php echo isset($download_description[$language['language_id']]) ? $download_description[$language['language_id']]['description'] : ''; ?></textarea>
+                <img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['description']; ?>" /><br />
+                <?php if (isset($error_name[$language['language_id']])) { ?>
+                <span class="error"><?php echo $error_description[$language['language_id']]; ?></span><br />
+                <?php } ?>
+                <?php } ?></td>
             </tr>
 
             <tr>
@@ -56,6 +59,7 @@
                 <span class="error"><?php echo $error_date_end; ?></span>
                 <?php } ?></td>
             </tr>
+            <?php /* blitz code */ ?>
 
           <tr>
             <td><?php echo $entry_remaining; ?></td>
@@ -106,9 +110,11 @@ new AjaxUpload('#button-upload', {
 });
 //--></script>
 
+<?php /* blitz code */ ?>
 <script type="text/javascript" src="view/javascript/jquery/ui/jquery-ui-timepicker-addon.js"></script>
 <script type="text/javascript"><!--
     $('.date').datepicker({dateFormat: 'yy-mm-dd'});
 
     //--></script>
+<?php /* blitz code */ ?>
 <?php echo $footer; ?>

@@ -18,7 +18,7 @@
       <form action="<?php echo $action; ?>" method="post" enctype="multipart/form-data" id="form">
         <div id="tab-general">
           <div style="width:273px;height:50px;padding:10px 10px 10px 10px;margin: 10px;font-size:16px" >
-              <label for="hackDownload">Ist das Produkt zum Download?</label>
+              <label for="hackDownload">Ist das Produkt ein Gutschein?</label>
               <select name="hackDownload"  class="hackDownload" style="margin-top:10px;width:220px;">
                   <?php if (!$shipping) { ?>
                   <option value="1" selected="selected" ><?php echo $text_yes; ?></option>
@@ -29,6 +29,22 @@
                   <option value="0" selected="selected" ><?php echo $text_no; ?></option>
                   <?php } ?>
               </select>
+
+
+                      <?php echo $entry_download; ?>
+                      <input type="text" name="download" value="" />
+
+
+                      <div id="product-download" class="scrollbox">
+                              <?php $class = 'odd'; ?>
+                              <?php foreach ($product_downloads as $product_download) { ?>
+                              <?php $class = ($class == 'even' ? 'odd' : 'even'); ?>
+                              <div id="product-download<?php echo $product_download['download_id']; ?>" class="<?php echo $class; ?>"> <?php echo $product_download['name']; ?><img src="view/image/delete.png" alt="" />
+                                  <input type="hidden" name="product_download[]" value="<?php echo $product_download['download_id']; ?>" />
+                              </div>
+                              <?php } ?>
+                          </div>
+
               <script type="text/javascript" >
                   $('.hackDownload').change(function(){
                       var option = $(this).find('option:selected');
@@ -49,7 +65,8 @@
               </script>
 
           </div>
-          <div id="languages" class="htabs">
+          <div style="clear:both;width:100%;height:1px;"></div>
+          <div id="languages" class="htabs" style="margin-top: 217px;">
             <?php foreach ($languages as $language) { ?>
             <a href="#language<?php echo $language['language_id']; ?>"><img src="view/image/flags/<?php echo $language['image']; ?>" title="<?php echo $language['name']; ?>" /> <?php echo $language['name']; ?></a>
             <?php } ?>
@@ -315,7 +332,7 @@
                   <?php } ?>
                 </div></td>
             </tr>
-            <tr>
+            <!-- <tr>
               <td><?php echo $entry_download; ?></td>
               <td><input type="text" name="download" value="" /></td>
             </tr>			
@@ -330,7 +347,7 @@
                   </div>
                   <?php } ?>
                 </div></td>
-            </tr>
+            </tr> -->
             <tr>
               <td><?php echo $entry_related; ?></td>
               <td><input type="text" name="related" value="" /></td>

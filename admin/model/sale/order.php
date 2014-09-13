@@ -769,7 +769,7 @@ class ModelSaleOrder extends Model {
 
             /* Blitz code */
             /* send each downloadable product image as attachment if order is complete */
-            $data['order_status_id'] = $this->config->get('config_complete_status_id');
+
             if ($this->config->get('config_complete_status_id') == $data['order_status_id']) {
 
 
@@ -805,15 +805,20 @@ class ModelSaleOrder extends Model {
 
                         $movedFile = DIR_IMAGE . $download_info['filename'];
 
+                        // remove ending hash
+                        $t = explode('.',$movedFile);
+                        array_pop($t);
+                        $movedFile = implode('.',$t);
+
                         copy($file,$movedFile);
 
-                        if(is_dir(DIR_IMAGE.'order_images/'))
+                        if(!is_dir(DIR_IMAGE.'order_images/'))
                         {
                             mkdir(DIR_IMAGE.'order_images/');
                             chmod(DIR_IMAGE.'order_images/',0777);
                         }
 
-                        if(is_dir(DIR_IMAGE.'order_images/'.$order_id.'/'))
+                        if(!is_dir(DIR_IMAGE.'order_images/'.$order_id.'/'))
                         {
                             mkdir(DIR_IMAGE.'order_images/'.$order_id.'/');
                             chmod(DIR_IMAGE.'order_images/'.$order_id.'/',0777);
@@ -821,9 +826,16 @@ class ModelSaleOrder extends Model {
 
                         $modifiedImageFile = DIR_IMAGE.'order_images/'. $order_id.'/' . $download_info['filename'];
 
+                        // remove ending hash
+                        $t = explode('.',$modifiedImageFile);
+                        array_pop($t);
+                        // also remove extension ( if PDF conversion )
+                        array_pop($t);
+                        $modifiedImageFile = implode('.',$t).'.pdf';
+
                         if(file_exists($movedFile))
                         {
-                            $this->model_catalog_download->prepareDownloadImage($movedFile,$modifiedImageFile,$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
+                            $this->model_catalog_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id,$download_info['date_end']);
                         }
                         else
                         {
@@ -851,7 +863,7 @@ class ModelSaleOrder extends Model {
             }
             /* Blitz code end */
 
-			//$mail->send();
+			$mail->send();
 		}
         
         $this->load->model('payment/amazon_checkout');

@@ -574,7 +574,7 @@ class ModelCheckoutOrder extends Model {
 
                             if(file_exists($movedFile))
                             {
-                                $this->model_account_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id);
+                                $this->model_account_download->prepareDownloadImagePdf(str_ireplace(DIR_IMAGE,'',$movedFile),str_ireplace(DIR_IMAGE,'',$modifiedImageFile),$order_info['firstname'],$order_info['lastname'],$download_info['name'],$download_info['description'],$order_id,$download_info['date_end']);
                             }
                             else
                             {

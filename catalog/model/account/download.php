@@ -50,7 +50,7 @@ class ModelAccountDownload extends Model {
     }
 
 
-    public function prepareDownloadImagePdf($filename,$newfilename,$firstname,$lastname,$title,$description,$code)
+    public function prepareDownloadImagePdf($filename,$newfilename,$firstname,$lastname,$title,$description,$code,$date_end)
     {
         $this->load->model('tool/image');
         require_once(DIR_SYSTEM.'library/tcpdf/tcpdf.php');
@@ -98,6 +98,8 @@ class ModelAccountDownload extends Model {
 
         $pdf->Ln(10);
 
+        $pdf->SetFont('times', '', 11);
+
         $pdf->Write(0,$description);
 
         $pdf->setCellPaddings(70);
@@ -108,7 +110,17 @@ class ModelAccountDownload extends Model {
         $pdf->Ln(10);
         $pdf->Ln(10);
 
-        $pdf->Write(0,$code);
+        $pdf->SetFont('times', '', 7);
+        $pdf->Write(0,'Beauty Center Billstedt');
+        $pdf->Ln(4);
+
+        $pdf->SetFont('times', 'B', 9);
+        $pdf->Write(0,'#'.$code);
+
+        $pdf->Ln(4);
+
+        $pdf->SetFont('times', '', 9);
+        $pdf->Write(0,'gültig bis: '.$date_end);
 
 
         $pdf->Output(DIR_IMAGE.$newfilename,'F');

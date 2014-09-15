@@ -66,7 +66,7 @@
             <td><input type="text" name="remaining" value="<?php echo $remaining; ?>" size="6" /></td>
           </tr>
           <?php if ($download_id) { ?>
-          <tr>
+          <tr style="display: none;">
             <td><?php echo $entry_update; ?></td>
             <td><?php if ($update) { ?>
               <input type="checkbox" name="update" value="1" checked="checked" />

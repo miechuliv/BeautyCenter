@@ -269,6 +269,9 @@ class ControllerCatalogDownload extends Controller {
 		$this->data['entry_mask'] = $this->language->get('entry_mask');
     	$this->data['entry_remaining'] = $this->language->get('entry_remaining');
     	$this->data['entry_update'] = $this->language->get('entry_update');
+
+        $this->data['entry_description'] = $this->language->get('entry_description');
+        $this->data['entry_date_end'] = $this->language->get('entry_date_end');
   
     	$this->data['button_save'] = $this->language->get('button_save');
     	$this->data['button_cancel'] = $this->language->get('button_cancel');
@@ -302,13 +305,13 @@ class ControllerCatalogDownload extends Controller {
         if (isset($this->error['description'])) {
             $this->data['error_description'] = $this->error['description'];
         } else {
-            $this->data['error_description'] = '';
+            $this->data['error_description'] = array();
         }
 
         if (isset($this->error['date_end'])) {
-            $this->data['date_end'] = $this->error['date_end'];
+            $this->data['error_date_end'] = $this->error['date_end'];
         } else {
-            $this->data['date_end'] = '';
+            $this->data['error_date_end'] = '';
         }
         /* Blitz code end */
 				
@@ -381,13 +384,7 @@ class ControllerCatalogDownload extends Controller {
 		}
 
         /* Blitz code start */
-        if (isset($this->request->post['description'])) {
-            $this->data['description'] = $this->request->post['description'];
-        } elseif (!empty($download_info)) {
-            $this->data['description'] = $download_info['description'];
-        } else {
-            $this->data['description'] = '';
-        }
+
 
         if (isset($this->request->post['date_end'])) {
             $this->data['date_end'] = $this->request->post['date_end'];
@@ -449,11 +446,13 @@ class ControllerCatalogDownload extends Controller {
 		}
 
         /* Blitz code start */
-        if ((utf8_strlen($this->request->post['description']) < 3)) {
-            $this->error['description'] = $this->language->get('error_description');
+        foreach ($this->request->post['download_description'] as $language_id => $value) {
+            if ((utf8_strlen($value['description']) < 3) ) {
+                $this->error['description'][$language_id] = $this->language->get('error_description');
+            }
         }
 
-        if ((utf8_strlen($this->request->post['date_end']) < 3) || (utf8_strlen($this->request->post['date_end']) > 128)) {
+        if (!$this->request->post['date_end']) {
             $this->error['date_end'] = $this->language->get('error_date_end');
         }
         /* Blitz code end */

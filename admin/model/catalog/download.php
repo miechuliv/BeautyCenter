@@ -1,7 +1,7 @@
 <?php
 class ModelCatalogDownload extends Model {
 	public function addDownload($data) {
-      	$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "', date_end = '" . $this->db->escape($data['date_end']) . "' ,date_added = NOW()");
+      	$this->db->query("INSERT INTO " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "', date_end = '" . (int)$data['date_end'] . "' ,date_added = NOW()");
 
       	$download_id = $this->db->getLastId(); 
 
@@ -15,11 +15,11 @@ class ModelCatalogDownload extends Model {
 			$download_info = $this->getDownload($download_id);
         	
 			if ($download_info) {
-      			$this->db->query("UPDATE " . DB_PREFIX . "order_download SET `filename` = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "'  , date_end = '" . $this->db->escape($data['date_end']) . "' WHERE `filename` = '" . $this->db->escape($download_info['filename']) . "'");
+      			$this->db->query("UPDATE " . DB_PREFIX . "order_download SET `filename` = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "'  , date_end = '" . (int)$data['date_end'] . "' WHERE `filename` = '" . $this->db->escape($download_info['filename']) . "'");
 			}
 		}		
 		
-        $this->db->query("UPDATE " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "' , date_end = '" . $this->db->escape($data['date_end']) . "' WHERE download_id = '" . (int)$download_id . "'");
+        $this->db->query("UPDATE " . DB_PREFIX . "download SET filename = '" . $this->db->escape($data['filename']) . "', mask = '" . $this->db->escape($data['mask']) . "', remaining = '" . (int)$data['remaining'] . "' , date_end = '" . (int)$data['date_end'] . "' WHERE download_id = '" . (int)$download_id . "'");
 
       	$this->db->query("DELETE FROM " . DB_PREFIX . "download_description WHERE download_id = '" . (int)$download_id . "'");
 
@@ -125,6 +125,13 @@ class ModelCatalogDownload extends Model {
 
     public function prepareDownloadImagePdf($filename,$newfilename,$firstname,$lastname,$title,$description,$code,$date_end)
     {
+
+        $currentDate = new DateTime();
+
+        $currentDate->modify('+ '.$date_end.' month');
+
+        $date_end = $currentDate->format('Y-m-d');
+
         $this->load->model('tool/image');
         require_once(DIR_SYSTEM.'library/tcpdf/tcpdf.php');
 

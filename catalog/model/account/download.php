@@ -52,6 +52,13 @@ class ModelAccountDownload extends Model {
 
     public function prepareDownloadImagePdf($filename,$newfilename,$firstname,$lastname,$title,$description,$code,$date_end)
     {
+        // calculate date
+        $currentDate = new DateTime();
+
+        $currentDate->modify('+ '.$date_end.' month');
+
+        $date_end = $currentDate->format('Y-m-d');
+
         $this->load->model('tool/image');
         require_once(DIR_SYSTEM.'library/tcpdf/tcpdf.php');
 
@@ -120,7 +127,7 @@ class ModelAccountDownload extends Model {
         $pdf->Ln(4);
 
         $pdf->SetFont('times', '', 9);
-        $pdf->Write(0,'gültig bis: '.$date_end);
+        $pdf->Write(0,'Gültig bis:: '.$date_end);
 
 
         $pdf->Output(DIR_IMAGE.$newfilename,'F');
